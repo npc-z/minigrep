@@ -1,3 +1,4 @@
+use colored::*;
 use std::fs;
 
 pub struct Config {
@@ -24,8 +25,8 @@ impl Config {
     }
 }
 
-fn search(config: Config) -> Vec<SearchResult> {
-    let contents = fs::read_to_string(config.search_path).expect("read file failed");
+fn search(config: &Config) -> Vec<SearchResult> {
+    let contents = fs::read_to_string(&config.search_path).expect("read file failed");
     let mut result: Vec<SearchResult> = vec![];
     let mut index: u16 = 1;
     for line in contents.to_lowercase().lines() {
@@ -41,16 +42,16 @@ fn search(config: Config) -> Vec<SearchResult> {
     return result;
 }
 
-fn display_search_result(result: Vec<SearchResult>) {
+fn display_search_result(result: Vec<SearchResult>, highlight: &str) {
     for r in result {
         let line = r.line;
-        let c = r.content;
+        let c = r.content.replace(highlight, &highlight.red().to_string());
         println!("line: {line}");
-        println!("\t{c}");
+        println!("  {c}");
     }
 }
 
-pub fn run(config: Config) {
+pub fn run(config: &Config) {
     let result = search(config);
-    display_search_result(result);
+    display_search_result(result, &config.query);
 }

@@ -7,5 +7,5 @@ fn main() {
     // dbg!(&args);
     let config = Config::build(&args).expect("parse args failed");
 
-    run(config);
+    run(&config);
 }
